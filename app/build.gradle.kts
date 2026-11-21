@@ -28,3 +28,7 @@ android {
         buildConfig = true
     }
 }
+
+dependencies {
+    implementation("org.tensorflow:tensorflow-lite-task-vision:0.4.4")
+}
