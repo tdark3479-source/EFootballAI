@@ -158,6 +158,8 @@ class CaptureService : Service() {
                             if (result != null) {
                                 people = result.people
                                 footballs = result.footballs
+
+                                Log.i(TAG, "VISION QUERY | People: $people | Sports balls: $footballs | Model ready: $visionReady")
                             }
                         } catch (error: Exception) {
                             Log.e(TAG, "Object detection failed", error)
