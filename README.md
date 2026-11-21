@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # eFootball AI Companion — Android starter v0.1
 
 This is a native Android Studio starter project for a local-only visual companion.
@@ -31,3 +32,6 @@ The capture service downscales frames to a maximum width of 720 pixels and uses 
 
 ## Privacy and fair play
 Use the companion for permitted visual analysis and coaching. It does not control the game or automate competitive matches. Follow eFootball's terms and Android's screen-capture rules.
+=======
+# EFootballAI
+
