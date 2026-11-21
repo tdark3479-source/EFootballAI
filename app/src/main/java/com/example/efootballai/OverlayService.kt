@@ -18,7 +18,7 @@ class OverlayService : Service() {
         super.onCreate()
         windowManager = getSystemService(Context.WINDOW_SERVICE) as WindowManager
         panel = TextView(this).apply {
-            text = "AI COMPANION\\nAnalysis standby"
+            text = "AI COMPANION\nAnalysis standby"
             textSize = 12f
             setTextColor(0xFFFFFFFF.toInt())
             setBackgroundColor(0xDD15202B.toInt())
