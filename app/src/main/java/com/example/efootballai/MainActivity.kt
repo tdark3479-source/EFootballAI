@@ -46,7 +46,7 @@ class MainActivity : Activity() {
             setPadding(0, 12, 0, 12)
         }
         metrics = TextView(this).apply {
-            text = "Capture: off\\nFrames analysed: 0\\nProcessing rate: -- FPS\\nLatest frame: --"
+            text = "Capture: off\nFrames analysed: 0\nProcessing rate: -- FPS\nLatest frame: --"
             textSize = 15f
             setTextColor(0xFFE6EDF3.toInt())
             setPadding(0, 8, 0, 20)
@@ -59,7 +59,7 @@ class MainActivity : Activity() {
         }
         val overlay = makeButton("Enable floating panel") { requestOverlayAndShow() }
         val privacy = TextView(this).apply {
-            text = "\\nPrivacy: frames are processed locally and are not uploaded. This starter build provides visual capture and performance telemetry; player/ball recognition and gameplay control are not implemented."
+            text = "\nPrivacy: frames are processed locally and are not uploaded. This starter build provides visual capture and performance telemetry; player/ball recognition and gameplay control are not implemented."
             textSize = 12f
             setTextColor(0xFF9FB3C8.toInt())
         }
@@ -79,10 +79,10 @@ class MainActivity : Activity() {
             runOnUiThread {
                 status.text = if (m.running) "Status: Capturing" else "Status: Standby"
                 metrics.text = "Capture: ${if (m.running) "on" else "off"}" +
-                    "\\nFrames analysed: ${m.frames}" +
-                    "\\nProcessing rate: ${"%.1f".format(m.fps)} FPS" +
-                    "\\nLatest frame: ${m.width} × ${m.height}" +
-                    "\\nFrame interval: ${m.intervalMs} ms"
+                    "\nFrames analysed: ${m.frames}" +
+                    "\nProcessing rate: ${"%.1f".format(m.fps)} FPS" +
+                    "\nLatest frame: ${m.width} × ${m.height}" +
+                    "\nFrame interval: ${m.intervalMs} ms"
             }
         }
     }
