@@ -103,6 +103,8 @@ class MainActivity : Activity() {
                     append(m.footballs)
                     append("\nVision model: ")
                     append(if (m.visionReady) "READY" else "UNAVAILABLE")
+                    append("\nVision diagnostic: ")
+                    append(m.visionDiagnostic)
                 }
             }
         }

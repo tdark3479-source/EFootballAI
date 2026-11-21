@@ -34,7 +34,8 @@ class CaptureService : Service() {
         val intervalMs: Long,
         val people: Int,
         val footballs: Int,
-        val visionReady: Boolean
+        val visionReady: Boolean,
+        val visionDiagnostic: String
     )
 
     private var projection: MediaProjection? = null
@@ -57,6 +58,7 @@ class CaptureService : Service() {
     private var people = 0
     private var footballs = 0
     private var visionReady = false
+    private var visionDiagnostic = "NOT STARTED"
 
     companion object {
         const val EXTRA_RESULT_CODE = "result_code"
@@ -107,6 +109,7 @@ class CaptureService : Service() {
         people = 0
         footballs = 0
         visionReady = false
+        visionDiagnostic = "INITIALIZING MODEL"
         stopping.set(false)
 
         worker = HandlerThread("efootball-frame-worker").also { it.start() }
@@ -131,12 +134,15 @@ class CaptureService : Service() {
 
             handler?.post {
                 try {
+                    Log.i(TAG, "Vision initialization started")
                     vision = VisionDetector(applicationContext)
                     visionReady = true
+                    visionDiagnostic = "READY: model loaded"
                     Log.i(TAG, "Vision detector initialized")
-                } catch (error: Exception) {
+                } catch (error: Throwable) {
                     visionReady = false
-                    Log.e(TAG, "Vision initialization failed", error)
+                    visionDiagnostic = diagnosticFor("INIT FAILED", error)
+                    Log.e(TAG, "Vision initialization failed: $visionDiagnostic", error)
                 }
                 publishMetrics(0.0, 0L)
             }
@@ -161,8 +167,9 @@ class CaptureService : Service() {
 
                                 Log.i(TAG, "VISION QUERY | People: $people | Sports balls: $footballs | Model ready: $visionReady")
                             }
-                        } catch (error: Exception) {
-                            Log.e(TAG, "Object detection failed", error)
+                        } catch (error: Throwable) {
+                            visionDiagnostic = diagnosticFor("INFERENCE FAILED", error)
+                            Log.e(TAG, "Object detection failed: $visionDiagnostic", error)
                         } finally {
                             bitmap.recycle()
                         }
@@ -208,11 +215,17 @@ class CaptureService : Service() {
         return Bitmap.createBitmap(pixels, imageWidth, imageHeight, Bitmap.Config.ARGB_8888)
     }
 
+    private fun diagnosticFor(stage: String, error: Throwable): String {
+        val detail = error.message?.replace('\n', ' ')?.take(180).orEmpty()
+        return if (detail.isBlank()) "$stage: ${error.javaClass.simpleName}" else "$stage: ${error.javaClass.simpleName}: $detail"
+    }
+
     private fun publishMetrics(fps: Double, interval: Long) {
         val snapshot = Metrics(
             running = running.get(), frames = frameCount, fps = fps,
             width = width, height = height, intervalMs = interval,
-            people = people, footballs = footballs, visionReady = visionReady
+            people = people, footballs = footballs, visionReady = visionReady,
+            visionDiagnostic = visionDiagnostic
         )
         onMetrics?.invoke(snapshot)
         OverlayService.updateMetrics(snapshot)
